@@ -70,7 +70,13 @@ export class Urchain {
   }
 
   async getFeePerKb(): Promise<IFees> {
-    return await this._get("fees", {});
+    // return await this._get("fees", {});
+    const _fee = await this._get("https://mempool.space/api/v1/fees/recommended", {});
+    return {
+      "slowFee": _fee['economyFee'] * 1000,
+      "avgFee": _fee['halfHourFee'] * 1000,
+      "fastFee": _fee['fastestFee'] * 1000
+    };
   }
 
   balance(scriptHash: string): Promise<{
@@ -162,7 +168,9 @@ export class Urchain {
   }
 
   async bestBlock() {
-    return await this._post("best-header", {});
+    // return await this._post("best-header", {});
+    const height = await this._get("https://mempool.space/api/blocks/tip/height", {});
+    return { height };
   }
 
   async allTokens() {

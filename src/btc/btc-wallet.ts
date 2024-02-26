@@ -168,19 +168,19 @@ export class BTCWallet extends Wallet {
       toAddresses,
       this.addressP2WPKH.address!,
       network,
-      feeRate.avgFee,
+      feeRate.fastFee,
       1000,
     );
 
     const estimatedSize = estimatedPsbt.virtualSize();
-    const realFee = Math.floor((estimatedSize * feeRate.avgFee) / 1000 + 1);
+    const realFee = Math.floor((estimatedSize * feeRate.fastFee) / 1000 + 1);
     const finalTx = createCoinPsbt(
       privateKey,
       utxos,
       toAddresses,
       this.addressP2WPKH.address!,
       network,
-      feeRate.avgFee,
+      feeRate.fastFee,
       realFee,
     );
     return await this.urchain.broadcast(finalTx.toHex());
@@ -272,7 +272,7 @@ export class BTCWallet extends Wallet {
       ]);
     }
     if (undefined === feeRate) {
-      feeRate = (await this.urchain.getFeePerKb()).avgFee;
+      feeRate = (await this.urchain.getFeePerKb()).fastFee;
     }
     const network =
       bitcoinjs.networks[
